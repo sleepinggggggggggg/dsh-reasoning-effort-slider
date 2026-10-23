@@ -1,7 +1,7 @@
 {
   "name": "dsh-reasoning-effort-slider",
   "version": "0.2.2",
-  "description": "把 DSH 官方模型菜单里的「推理等级」变成一条 Codex 风格推理强度滑条。",
+  "description": "Codex-style reasoning-effort slider for DeepSeek Harness: turns the model menu's Effort row into a continuous, level-snapping slider.",
   "license": "MIT",
   "type": "module",
   "main": "./index.js",
@@ -19,12 +19,13 @@
     "locale/*.json",
     "icon.svg",
     "README.md",
+    "README.zh.md",
     "LICENSE"
   ],
   "icon": "./icon.svg",
   "meta": {
-    "title": "推理强度滑条",
-    "description": "把官方模型菜单里的「推理等级」变成一条 Codex 风格滑条：按档吸附的白色圆钮、蓝紫渐变、高档星尘，档位名与取值随主题高亮。"
+    "title": "Reasoning Effort Slider",
+    "description": "Turns the model menu Effort row into a Codex-style slider: a white knob that follows the pointer, blue-to-violet fill, starfield at high levels, and a tinted effort label."
   },
   "dsh": {
     "bundle": {

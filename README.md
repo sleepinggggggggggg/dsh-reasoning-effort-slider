@@ -1,102 +1,127 @@
 # dsh-reasoning-effort-slider
 
-把 DeepSeek Harness 官方模型菜单里的 **「推理等级 / Effort」那一行**，变成一条 **Codex 风格推理强度滑条**：
+English | [中文](README.zh.md)
+
+Turns the **Effort row** of DeepSeek Harness's model menu into a **Codex-style reasoning-effort slider**:
 
 ```
-┌──────────────────────────────────────┐
-│ 模型        DeepSeek-V4.1-Flash 1017 › │
-├──────────────────────────────────────┤
-│ 推理等级                     Max     › │   ← 官方行，数值文字跟着档位变色
-│ ●━━━━━━━━━━━━━━━━━━━━━━━━━━◯         │   ← 插件注入：28px 粗轨 + 白色圆钮
-│ ·           ·           ·          ·  │   ← 圆点刻度（已到达的亮）
-│                   Max                │   ← 当前档位名（拖动时实时预览）
-└──────────────────────────────────────┘
+┌────────────────────────────────────────┐
+│ Model       DeepSeek-V4.1-Flash 1017 › │
+├────────────────────────────────────────┤
+│ Effort                        Max    › │   ← native row; its value text is tinted by level
+│ ●━━━━━━━━━━━━━━━━━━━━━━━━━◯           │   ← injected: 28px track + white knob
+│ ·           ·           ·          ·   │   ← level ticks (reached ones brighten)
+│                   Max                  │   ← current level name (live while dragging)
+└────────────────────────────────────────┘
 ```
 
-输入框工具行**不加任何东西**，收起态的模型席还是官方的 `模型名 · 档位 ⌄`，只是那枚档位文字会按档位着色。
+Nothing is added to the composer tool row. The collapsed model seat keeps the native
+`model · effort ⌄` typography; only that effort text is tinted.
 
-## 交互
+## Interaction
 
-| 操作 | 行为 |
+| Action | Behaviour |
 | --- | --- |
-| 在轨道上按下 | 直接跳到按下的那一格 |
-| 拖动 | 旋钮**跟手**：指针到哪，圆钮和填充就到哪；档位名、圆点、写入按最近的档位走，松手后 80ms 吸附到格上（无回弹） |
-| 松手 | 立即落地（拖动途中停手约 160ms 也会自动落地） |
-| `←` `→` `↑` `↓` | 一次一档，立即提交 |
-| `Home` / `End` | 最低 / 最高档 |
-| 悬停 | 提示当前档位与「越往右越费 token」 |
+| Press on the track | Jumps to the pressed cell |
+| Drag | The knob **follows the pointer**: knob and fill track the cursor, while the level name, ticks and writes use the nearest level; on release it snaps onto the cell in 80 ms, without bounce |
+| Release | Commits immediately (resting the pointer for ~160 ms also commits) |
+| `←` `→` `↑` `↓` | One level per press, committed immediately |
+| `Home` / `End` | Lowest / highest level |
+| Hover | Tooltip with the current level and “further right costs more tokens” |
 
-写入有去重与合并：一次拖动最多落地几次，落在当前档位时**一次都不写**；失败会在档位名处显示原因、4 秒后恢复。
+Writes are deduplicated and coalesced: a drag commits at most a few times, and picking the level
+already in effect writes **nothing**. A failure shows its reason under the track and clears after 4 s.
 
-## 颜色与特效（由档位位置驱动，与档数无关）
+## Colour and effects (driven by level position, independent of level count)
 
-| 位置 | 填充右端 | 星尘 | 档位文字 |
+| Position | Fill right end | Starfield | Level text |
 | --- | --- | --- | --- |
-| 第 1 档 | 蓝 `#4d93f8` | 无 | 官方灰（`Off` 不染色） |
-| 中间档 | 蓝 → 紫 `#9333ea` | 无 | 蓝 → 靛 |
-| 最高档 | 深紫 `#4c1d95` | 26 颗错峰星尘 + 紫色能量层 | 紫罗兰 `#8b5cf6` |
+| First level | blue `#4d93f8` | none | native (an `Off` level is never tinted) |
+| Middle | blue → violet `#9333ea` | none | blue → indigo |
+| Highest | deep violet `#4c1d95` | 26 staggered stars + violet nova layer | violet `#8b5cf6` |
 
-- 填充是 `linear-gradient(90deg, 蓝 → 当前位置的颜色)`：左端恒为蓝、右端随档位变深。
-- 能量层与星尘都**只覆盖已填充的那一段**，旋钮右边不会出现能量。
-- 旋钮是白圆，直径等于轨道高度（28px），圆心内缩 14px，所以两端永远是完整的圆。
+- The fill is `linear-gradient(90deg, blue → colour at the current position)`: always blue on the
+  left, deepening to the right.
+- The nova layer and the starfield are **clipped to the filled part**, so nothing glows to the
+  right of the knob.
+- The knob is a white circle as tall as the track (28 px) whose centre is inset by 14 px, so it
+  stays a full circle at both ends.
 
-## 它为什么不弄坏官方菜单
+## Why it cannot break the native menu
 
-- 只加一个 `data-dres-row` 属性给官方那一行（放大高度、允许折行），官方 class、文案、chevron 一个都不动。
-- 认不出预期结构就 **fail-open**：触发器没有 `aria-controls`、菜单里不是「模型 / 推理等级」两行、或者这一行不是自己 composer 卡片的，就完全不注入，官方菜单照常可用。
-- 打开菜单时插件长高那一行，官方自己的 `ResizeObserver` 会重新测量并把菜单摆回屏幕内。
-- 卸载或关闭菜单时：容器删除、属性移除、被染色的文字颜色还原。
+- It only adds a `data-dres-row` attribute to the native effort row (taller, wrapping). Native
+  classes, copy and chevron are untouched.
+- Anything unexpected is **fail-open**: no `aria-controls` on the trigger, a menu that is not the
+  model/effort pair, or a row outside this composer card means “do not inject” — the native menu
+  keeps working.
+- Growing that row triggers the menu's own `ResizeObserver`, which re-measures and clamps the panel
+  back on screen.
+- On close or unload the container is removed, the attribute dropped, and every tinted text colour
+  restored.
 
-## 数据路径（全部官方公开面）
+## Data path (native public surface only)
 
-| 用途 | 接口 |
+| Purpose | API |
 | --- | --- |
-| 读档位 | `session.modelCatalog()` → `groups[].models[].reasoning.efforts` |
-| 读当前值 | `modelSelection` 会话投影（`useProjection`），缺省回落到目录默认值 |
-| 写档位 | `session.selectModel({ sessionId, provider, model, reasoningEffort })` —— 和官方菜单同一个写入口 |
+| Read levels | `session.modelCatalog()` → `groups[].models[].reasoning.efforts` |
+| Read current value | the `modelSelection` session projection (`useProjection`), falling back to the catalog default |
+| Write level | `session.selectModel({ sessionId, provider, model, reasoningEffort })` — the same entry the native menu uses |
 
-## 安装
+## Install
 
-从 GitHub 直装：
+From GitHub:
 
 ```
 dsh plugin --profile <profile> add github:sleepinggggggggggg/dsh-reasoning-effort-slider
 ```
 
-本地目录安装：
+From a local directory:
 
 ```
-dsh plugin --profile <profile> add <本目录绝对路径>
+dsh plugin --profile <profile> add <absolute path to this directory>
 ```
 
-桌面端在 **设置 → 插件 → 添加插件** 里填 `github:sleepinggggggggggg/dsh-reasoning-effort-slider` 或本地目录路径。装完刷新页面（或完全重开桌面应用）。
+On desktop, use **Settings → Plugins → Add plugin** with the same value, then reload the page (or
+restart the app).
 
-## 已知边界
+## Known limits
 
-- **依赖官方菜单的语义结构**（`aria-haspopup` / `aria-expanded` / `aria-controls`、根面板两行 `role="menuitem"`）。宿主改版后若结构变了，插件静默不生效（不会把菜单改坏），需要跟进适配。
-- 必须先点开模型菜单才能调档位；输入框工具行上不常驻读数。
-- 模型只声明一档（例如关掉思考）时，控件不渲染，官方那一行也会恢复原高（`setActive` 会撤掉加高）。
-- 模型目录在页面生命周期内缓存一份（断线重连会重拉）。设置里新加 provider / 模型后要刷新一次页面。
-- 提交的是「下一次请求」的选择；正在跑的那一步保持它开始时的档位（和官方菜单一致）。
+- **Depends on the native menu's semantic structure** (`aria-haspopup` / `aria-expanded` /
+  `aria-controls`, two root rows with `role="menuitem"`). If a host release changes it, the plugin
+  silently does nothing — it never breaks the menu — and needs a follow-up.
+- The model menu has to be open to change the level; nothing is shown in the composer tool row.
+- A model that advertises a single level (for example with thinking disabled) renders no control,
+  and the native row keeps its original height (`setActive` drops the growth).
+- The model catalog is cached for the page lifetime (a reconnect refetches it). Providers or models
+  added in Settings need one page reload.
+- The selection applies to the **next request**; a running step keeps the level it started with
+  (same as the native menu).
 
-## 致谢
+## Acknowledgements
 
-这个插件的判断来自对三个同类实现的阅读，没有复制它们的代码（本仓库是独立实现）：
+The design decisions come from reading three sibling implementations. No code was copied; this
+repository is an independent implementation.
 
-- [HanaAyane/dsh-reasoning-effort](https://github.com/HanaAyane/dsh-reasoning-effort) —— 「大肥鱼」版，确认了「白圆钮 + 轨道 + 圆点 + 档位名」这套视觉语言，以及 `modelSelection` 投影 + `session.selectModel` 的数据路径。
-- [Microqian2th/dsh-codex-effort-slider](https://github.com/Microqian2th/dsh-codex-effort-slider) —— 把滑条注入官方「推理等级」行的 DOM 锚点策略（`aria-haspopup` / `aria-expanded` / `aria-controls` / `role="menuitem"`），以及蓝 → 紫 → 深紫的配色与星尘位置曲线。
-- [Bai-2008/a-better-dsh-codex-effort-slider](https://github.com/Bai-2008/a-better-dsh-codex-effort-slider) —— 接管模型席那条路线的取舍说明（本插件没有走那条路）。
+- [HanaAyane/dsh-reasoning-effort](https://github.com/HanaAyane/dsh-reasoning-effort) — the white
+  knob + track + ticks + level-name visual language, and the `modelSelection` projection +
+  `session.selectModel` data path.
+- [Microqian2th/dsh-codex-effort-slider](https://github.com/Microqian2th/dsh-codex-effort-slider) —
+  the DOM anchor strategy for injecting into the native Effort row (`aria-haspopup` /
+  `aria-expanded` / `aria-controls` / `role="menuitem"`), plus the blue → violet → deep violet
+  palette and the starfield position curve.
+- [Bai-2008/a-better-dsh-codex-effort-slider](https://github.com/Bai-2008/a-better-dsh-codex-effort-slider)
+  — the trade-offs of taking over the model seat entirely, a route this plugin does not take.
 
-## 许可
+## Licence
 
-MIT，见 [LICENSE](LICENSE)。
+MIT — see [LICENSE](LICENSE).
 
-## 文件
+## Files
 
-| 文件 | 作用 |
+| File | Purpose |
 | --- | --- |
-| `index.js` | Host 半：空 `apply()`，只为让 bundle 进入 profile |
-| `client.js` | 全部逻辑：DOM 桥、portal 滑条、配色/星尘、字典 |
-| `cordis.patch.yml` | 插入 bundle 行 |
-| `locale/{zh,en}.json` | 管理页文案 + 控件文案 |
-| `icon.svg` | 插件管理页图标 |
+| `index.js` | Host half: empty `apply()`, only there so the bundle enters the profile |
+| `client.js` | Everything: DOM bridge, portaled slider, colour/starfield logic, dictionaries |
+| `cordis.patch.yml` | Inserts the bundle row |
+| `locale/{zh,en}.json` | Plugin-manager copy and control strings |
+| `icon.svg` | Icon shown in the plugin manager |
