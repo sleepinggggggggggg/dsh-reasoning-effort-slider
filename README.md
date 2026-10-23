@@ -57,11 +57,19 @@
 
 ## 安装
 
+从 GitHub 直装：
+
+```
+dsh plugin --profile <profile> add github:sleepinggggggggggg/dsh-reasoning-effort-slider
+```
+
+本地目录安装：
+
 ```
 dsh plugin --profile <profile> add <本目录绝对路径>
 ```
 
-桌面端在 **设置 → 插件 → 添加插件** 里填本地目录路径。装完刷新页面（或完全重开桌面应用）。
+桌面端在 **设置 → 插件 → 添加插件** 里填 `github:sleepinggggggggggg/dsh-reasoning-effort-slider` 或本地目录路径。装完刷新页面（或完全重开桌面应用）。
 
 ## 已知边界
 
@@ -70,6 +78,18 @@ dsh plugin --profile <profile> add <本目录绝对路径>
 - 模型只声明一档（例如关掉思考）时，控件不渲染，官方那一行也会恢复原高（`setActive` 会撤掉加高）。
 - 模型目录在页面生命周期内缓存一份（断线重连会重拉）。设置里新加 provider / 模型后要刷新一次页面。
 - 提交的是「下一次请求」的选择；正在跑的那一步保持它开始时的档位（和官方菜单一致）。
+
+## 致谢
+
+这个插件的判断来自对三个同类实现的阅读，没有复制它们的代码（本仓库是独立实现）：
+
+- [HanaAyane/dsh-reasoning-effort](https://github.com/HanaAyane/dsh-reasoning-effort) —— 「大肥鱼」版，确认了「白圆钮 + 轨道 + 圆点 + 档位名」这套视觉语言，以及 `modelSelection` 投影 + `session.selectModel` 的数据路径。
+- [Microqian2th/dsh-codex-effort-slider](https://github.com/Microqian2th/dsh-codex-effort-slider) —— 把滑条注入官方「推理等级」行的 DOM 锚点策略（`aria-haspopup` / `aria-expanded` / `aria-controls` / `role="menuitem"`），以及蓝 → 紫 → 深紫的配色与星尘位置曲线。
+- [Bai-2008/a-better-dsh-codex-effort-slider](https://github.com/Bai-2008/a-better-dsh-codex-effort-slider) —— 接管模型席那条路线的取舍说明（本插件没有走那条路）。
+
+## 许可
+
+MIT，见 [LICENSE](LICENSE)。
 
 ## 文件
 
