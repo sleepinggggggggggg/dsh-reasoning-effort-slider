@@ -1,0 +1,9 @@
+{
+  "meta": {
+    "title": "Reasoning Effort Slider",
+    "description": "Turns the model menu Effort row into a Codex-style slider: a level-snapping white knob, blue-to-violet fill, starfield at high levels, and a tinted effort label."
+  },
+  "label": "Reasoning effort",
+  "hint": "Drag to set reasoning effort (further right costs more tokens)",
+  "error.prefix": "Switch failed: "
+}

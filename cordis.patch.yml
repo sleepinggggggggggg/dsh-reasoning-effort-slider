@@ -1,0 +1,8 @@
+# dsh-reasoning-effort-slider — bundle patch
+#
+# 插入一条 Host 行（空 apply，只负责让包进入当前 profile），
+# 真正的控件由同包的 client.js 以 Client module 形式加载。
+
+- insert:
+    - id: reasoning-effort-slider
+      name: dsh-reasoning-effort-slider
