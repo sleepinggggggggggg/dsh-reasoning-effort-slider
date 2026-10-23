@@ -1,6 +1,6 @@
 {
   "name": "dsh-reasoning-effort-slider",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "把 DSH 官方模型菜单里的「推理等级」变成一条 Codex 风格推理强度滑条。",
   "license": "MIT",
   "type": "module",
