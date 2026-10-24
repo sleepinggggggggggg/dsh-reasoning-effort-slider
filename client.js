@@ -269,6 +269,8 @@ window.__ModuleLoader__.load({
       let menuObserver = null
       let coloredValue = null
       let coloredTrigger = null
+      let menuClickGuard = null
+      let clickGuard = null
 
       const bodyObserver = new MutationObserver(schedule)
       bodyObserver.observe(document.body, { childList: true })
@@ -290,15 +292,54 @@ window.__ModuleLoader__.load({
         onTarget(next)
       }
 
+      /** Drop the armed click window and its timer. */
+      function clearClickGuard() {
+        if (clickGuard !== null && clickGuard.timer !== 0) clearTimeout(clickGuard.timer)
+        clickGuard = null
+      }
+
+      /**
+       * Swallow the click that a press on the slider produces.
+       *
+       * A click's target is the nearest common ancestor of pointerdown and
+       * pointerup, so a press on the track that is released a few pixels away —
+       * or released after React replaced the row — resolves to the official
+       * effort row and its `onClick` would drill into the native list. The guard
+       * is geometric, so ordinary clicks on the row keep working.
+       */
+      function suppressClicks(rect) {
+        clearClickGuard()
+        if (rect === undefined || rect === null) return
+        clickGuard = {
+          rect,
+          timer: setTimeout(clearClickGuard, 2500),
+        }
+      }
+
+      function onRowClickCapture(event) {
+        if (clickGuard === null) return
+        const { rect } = clickGuard
+        const inside = event.clientX >= rect.left - 18 && event.clientX <= rect.right + 18
+          && event.clientY >= rect.top - 18 && event.clientY <= rect.bottom + 18
+        if (!inside) return
+        event.preventDefault()
+        event.stopPropagation()
+        clearClickGuard()
+      }
+
+      function detachRow() {
+        if (row === null) return
+        if (row.isConnected) row.removeAttribute('data-dres-row')
+        row = null
+      }
+
       function clearInjection() {
         if (container !== null) {
           container.remove()
           container = null
         }
-        if (row !== null) {
-          if (row.isConnected) row.removeAttribute('data-dres-row')
-          row = null
-        }
+        detachRow()
+        clearClickGuard()
         coloredValue = null
         publish(null)
       }
@@ -316,7 +357,15 @@ window.__ModuleLoader__.load({
       function observeMenu(next) {
         if (menu === next) return
         if (menuObserver !== null) menuObserver.disconnect()
+        if (menuClickGuard !== null) {
+          if (menu !== null && menu.isConnected) menu.removeEventListener('click', menuClickGuard, true)
+          menuClickGuard = null
+        }
         menu = next
+        if (next !== null) {
+          menuClickGuard = onRowClickCapture
+          next.addEventListener('click', menuClickGuard, true)
+        }
         menuObserver = next === null ? null : new MutationObserver((records) => {
           // Our own portal lives inside the menu; ignoring its mutations stops
           // every drag frame from re-running the bridge.
@@ -420,7 +469,7 @@ window.__ModuleLoader__.load({
         }
         const nextRow = rows[rows.length - 1]
         if (row !== nextRow) {
-          if (row !== null && row.isConnected) row.removeAttribute('data-dres-row')
+          detachRow()
           row = nextRow
           coloredValue = null
         }
@@ -433,7 +482,7 @@ window.__ModuleLoader__.load({
 
         const spans = directSpans(row)
         const value = spans.length >= 2 ? spans[spans.length - 1] : null
-        publish({ container, value, paint, setActive })
+        publish({ container, value, paint, setActive, suppressClicks })
       }
 
       reconcile()
@@ -447,8 +496,13 @@ window.__ModuleLoader__.load({
           if (triggerObserver !== null) triggerObserver.disconnect()
           if (menuObserver !== null) menuObserver.disconnect()
           paint(null)
+          clearClickGuard()
           if (container !== null) container.remove()
-          if (row !== null && row.isConnected) row.removeAttribute('data-dres-row')
+          if (menuClickGuard !== null && menu !== null && menu.isConnected) {
+            menu.removeEventListener('click', menuClickGuard, true)
+            menuClickGuard = null
+          }
+          detachRow()
           onTarget(null)
         },
       }
@@ -620,6 +674,9 @@ window.__ModuleLoader__.load({
         if (drag.current.active) endDrag(false)
         event.preventDefault()
         event.stopPropagation()
+        // Arm the click guard before anything re-renders: the click that follows
+        // this press must not reach the official effort row.
+        if (track.current !== null) target.suppressClicks(track.current.getBoundingClientRect())
         // The gesture is owned by `window`, not by this element: a menu re-render
         // that replaces the node can no longer leave the slider armed, and a move
         // with no button held ends the drag instead of following the cursor.

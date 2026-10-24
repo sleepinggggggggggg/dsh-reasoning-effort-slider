@@ -1,6 +1,6 @@
 {
   "name": "dsh-reasoning-effort-slider",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "Codex-style reasoning-effort slider for DeepSeek Harness: turns the model menu's Effort row into a continuous, level-snapping slider.",
   "license": "MIT",
   "engines": {
