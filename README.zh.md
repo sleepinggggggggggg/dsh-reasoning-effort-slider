@@ -73,6 +73,12 @@ dsh plugin --profile <profile> add <本目录绝对路径>
 
 桌面端在 **设置 → 插件 → 添加插件** 里填 `github:sleepinggggggggggg/dsh-reasoning-effort-slider` 或本地目录路径。装完刷新页面（或完全重开桌面应用）。
 
+## 兼容性
+
+支持范围写在 `package.json` 的 `engines.dsh` 里：**DSH `>=0.2.0-rc.2 <0.3.0-0`**，已在 `0.2.1-rc.2` 上核对过。
+
+DSH 会在加载插件前检查这个范围：落在范围外的宿主版本会得到一条明确的「不兼容」提示，而不是留下一个静默不生效的滑条。
+
 ## 已知边界
 
 - **依赖官方菜单的语义结构**（`aria-haspopup` / `aria-expanded` / `aria-controls`、根面板两行 `role="menuitem"`）。宿主改版后若结构变了，插件静默不生效（不会把菜单改坏），需要跟进适配。

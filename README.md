@@ -84,6 +84,14 @@ dsh plugin --profile <profile> add <absolute path to this directory>
 On desktop, use **Settings → Plugins → Add plugin** with the same value, then reload the page (or
 restart the app).
 
+## Compatibility
+
+The supported host range is declared in `package.json` as `engines.dsh`:
+**DSH `>=0.2.0-rc.2 <0.3.0-0`**, verified against `0.2.1-rc.2`.
+
+DSH checks that range before loading a plugin. A host release outside it is refused with an
+explicit incompatibility message instead of leaving a slider that silently never appears.
+
 ## Known limits
 
 - **Depends on the native menu's semantic structure** (`aria-haspopup` / `aria-expanded` /
