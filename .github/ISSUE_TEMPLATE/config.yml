@@ -3,6 +3,6 @@ contact_links:
   - name: Email the maintainer
     url: mailto:nupotecrosstvo@gmail.com
     about: Setup help, custom model profiles, or anything that is not a bug report.
-  - name: Ideas and show-and-tell
-    url: https://github.com/sleepinggggggggggg/dsh-reasoning-effort-slider/discussions
-    about: Ask a question or share a setup in Discussions.
+  - name: Ask a question in Discussions
+    url: https://github.com/sleepinggggggggggg/dsh-reasoning-effort-slider/discussions/categories/q-a
+    about: Missing reasoning levels, custom model profiles, "does this work with X" — answered in Q&A, not in the tracker.
