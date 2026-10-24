@@ -128,6 +128,7 @@ repository is an independent implementation.
   **nupotecrosstvo@gmail.com**.
 - **Security** — email the same address instead of opening a public issue; see
   [SECURITY.md](SECURITY.md).
+- **Quick questions / build logs** — [@nupote_ on X](https://x.com/nupote_).
 
 ## Licence
 
