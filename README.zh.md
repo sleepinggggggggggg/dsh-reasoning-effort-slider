@@ -95,6 +95,12 @@ DSH 会在加载插件前检查这个范围：落在范围外的宿主版本会�
 - [Microqian2th/dsh-codex-effort-slider](https://github.com/Microqian2th/dsh-codex-effort-slider) —— 把滑条注入官方「推理等级」行的 DOM 锚点策略（`aria-haspopup` / `aria-expanded` / `aria-controls` / `role="menuitem"`），以及蓝 → 紫 → 深紫的配色与星尘位置曲线。
 - [Bai-2008/a-better-dsh-codex-effort-slider](https://github.com/Bai-2008/a-better-dsh-codex-effort-slider) —— 接管模型席那条路线的取舍说明（本插件没有走那条路）。
 
+## 反馈
+
+- **Bug 和功能请求** —— [开个 issue](https://github.com/sleepinggggggggggg/dsh-reasoning-effort-slider/issues)。模板会问插件版本和 DSH 版本，这一对信息基本就够定位了。
+- **装不上、自定义模型档位、想确认能不能配合某个端点用** —— 发邮件到 **nupotecrosstvo@gmail.com**。
+- **安全相关** —— 也发同一个邮箱，别开公开 issue，见 [SECURITY.md](SECURITY.md)。
+
 ## 许可
 
 MIT，见 [LICENSE](LICENSE)。

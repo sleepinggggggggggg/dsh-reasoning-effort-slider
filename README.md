@@ -120,6 +120,15 @@ repository is an independent implementation.
 - [Bai-2008/a-better-dsh-codex-effort-slider](https://github.com/Bai-2008/a-better-dsh-codex-effort-slider)
   — the trade-offs of taking over the model seat entirely, a route this plugin does not take.
 
+## Feedback
+
+- **Bugs and feature requests** — [open an issue](https://github.com/sleepinggggggggggg/dsh-reasoning-effort-slider/issues). The template asks for the
+  plugin and DSH versions; that pair is usually the whole diagnosis.
+- **Setup help, custom model profiles, "does this work with X"** — email
+  **nupotecrosstvo@gmail.com**.
+- **Security** — email the same address instead of opening a public issue; see
+  [SECURITY.md](SECURITY.md).
+
 ## Licence
 
 MIT — see [LICENSE](LICENSE).

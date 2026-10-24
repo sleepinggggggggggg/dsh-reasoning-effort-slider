@@ -1,0 +1,73 @@
+name: Bug report
+description: Something is broken, or the slider looks wrong
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for the report. DSH and the plugin both change quickly — the two version fields
+        below decide whether this is a plugin bug or a host change.
+
+  - type: input
+    id: plugin-version
+    attributes:
+      label: Plugin version
+      description: Settings → Plugins, or the tag you installed (`#v0.2.4`).
+      placeholder: v0.2.4
+    validations:
+      required: true
+
+  - type: input
+    id: dsh-version
+    attributes:
+      label: DSH version
+      description: About DeepSeek Harness, or `dsh --version`.
+      placeholder: 0.2.1-rc.2
+    validations:
+      required: true
+
+  - type: dropdown
+    id: os
+    attributes:
+      label: OS
+      options:
+        - macOS
+        - Windows
+        - Linux
+    validations:
+      required: true
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened
+      description: What you did, what you expected, and what happened instead.
+      placeholder: |
+        1. Open the model menu
+        2. Click "推理等级 / Effort"
+        3. ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: model
+    attributes:
+      label: Model and levels
+      description: The model id and the levels the menu advertises, if the problem involves a specific one.
+      placeholder: deepseek-flash · Off / Low / High / Max
+
+  - type: input
+    id: contact
+    attributes:
+      label: Contact (optional)
+      description: Only if you are fine with a follow-up outside this thread.
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Before posting
+      options:
+        - label: I am on DSH >= 0.2.0-rc.2, per `engines.dsh`
+          required: true
+        - label: I reloaded the page after installing or updating the plugin
+          required: true

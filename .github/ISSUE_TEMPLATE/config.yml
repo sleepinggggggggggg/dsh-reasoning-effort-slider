@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Email the maintainer
+    url: mailto:nupotecrosstvo@gmail.com
+    about: Setup help, custom model profiles, or anything that is not a bug report.
+  - name: Ideas and show-and-tell
+    url: https://github.com/sleepinggggggggggg/dsh-reasoning-effort-slider/discussions
+    about: Ask a question or share a setup in Discussions.
